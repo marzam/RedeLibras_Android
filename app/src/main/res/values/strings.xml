@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RedeLibras</string>
+    <string name="https_protocol">https://192.168.1.11/protocol.php?</string>
+    <string name="https_upload">https://192.168.1.11/upload.php</string>
+    <string name="https_delete">https://192.168.1.11/delete.php</string>
+    <string name="compressed_file">compressed.zip</string>
+    <!-- <string name="download">download</string> -->
+    <!-- <string name="upload">update</string> -->
+    <string name="version">version-1.0</string>
+    <string name="home">home</string>
+    <string name="title_activity_init">InitActivity</string>
+</resources>
