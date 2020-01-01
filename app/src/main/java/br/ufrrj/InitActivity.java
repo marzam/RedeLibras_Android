@@ -11,13 +11,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 public class InitActivity extends AppCompatActivity {
     private WebView mWebView = null;
-
+    private Toolbar mToolbar = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +24,9 @@ public class InitActivity extends AppCompatActivity {
         mWebView = findViewById(R.id.mainWeb);
 
 
-        Toolbar mToolbar =  findViewById(R.id.toolbar);
+        mToolbar =  findViewById(R.id.toolbar);
         mToolbar.setSubtitle("Selecione um Estado");
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -43,19 +42,12 @@ public class InitActivity extends AppCompatActivity {
         mWebView.setWebChromeClient(new MyWebChromeClient());
         mWebView.setWebViewClient(new SSLTolerentWebViewClient());
 
-        /*
-        System.getInstance().setContext(this.getApplicationContext());
-        System.getInstance().setAsset(this.getAssets());
-        System.getInstance().loads();
-*/
-        //Intent intent =  new Intent(this, LoginActivity.class);
-         //startActivity(intent);
 
-        /*
         Intent intent = new Intent("custom-event-name");
         intent.putExtra("message", "1");
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-*/
+
+
 
         /*
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -78,16 +70,32 @@ public class InitActivity extends AppCompatActivity {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             int opt = Integer.parseInt(message);
-            /*
+
             switch (opt){
 
-                case 1: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=1");break;
-                case 2: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=3&id_state=" + System.getInstance().getState_toString());break;
-                case 3: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());break;
-                case 4: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=6&id_user=" + System.getInstance().getWorker_toString());break;
+                case 1:
+                    mToolbar.setSubtitle("Selecione um Estado");
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=1");
+                    break;
+                case 2:
+                    mToolbar.setSubtitle("Selecione uma cidade");
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=2&id_state=" + Global.getSelectedStateString());
+                    break;
+                case 4:
+                    mToolbar.setSubtitle("Selecione uma especialidade");
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=4&id_city=" + Global.getSelectedCityString());
+                    //mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());
+                    break;
+
+                case 5:
+                    mToolbar.setSubtitle("Selecione o/a prestador(a) de serviço");
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_service" + Global.getSelectedServiceString() + "&id_city=" + Global.getSelectedCityString());
+                    //mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());
+                    break;
+                //case 4: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=6&id_user=" + System.getInstance().getWorker_toString());break;
                 //case 2: mWebView.loadUrl("https://192.168.1.11/redelibras.php?state=1");break;
             }
-*/
+
 
             //https://192.168.1.11/redelibras.php?state=3&id_state=18
             //https://192.168.1.11/redelibras.php?state=5&id_state=18&id_service=5

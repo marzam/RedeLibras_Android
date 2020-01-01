@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">RedeLibras</string>
+    <string name="https_redelibras">https://192.168.1.11/redelibras.php?</string>
     <string name="https_protocol">https://192.168.1.11/protocol.php?</string>
     <string name="https_upload">https://192.168.1.11/upload.php</string>
     <string name="https_delete">https://192.168.1.11/delete.php</string>

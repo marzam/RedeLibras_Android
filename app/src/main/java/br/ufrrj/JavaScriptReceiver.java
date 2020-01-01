@@ -15,15 +15,53 @@ public class JavaScriptReceiver {
 
         //Toast toast = Toast.makeText(mContext, "Ola Android" + Integer.toString(orderid), Toast.LENGTH_SHORT);
         //toast.show();
-        System.getInstance().setState(id);
+        Global.getInstance().setSelectedState(id);
+
         sendMSG("2");
 
 
     }
 
     @JavascriptInterface
+    public void onClick_select_city(int id){
+
+        //Toast toast = Toast.makeText(mContext, "Ola Android" + Integer.toString(orderid), Toast.LENGTH_SHORT);
+        //toast.show();
+        Global.getInstance().setSelectedCity(id);
+        //SELECT * FROM tbCidades WHERE ID='2780';ping
+        sendMSG("4");
+
+
+    }
+
+    @JavascriptInterface
+    public void onClick_select_service_in_city(int id){
+
+        //Toast toast = Toast.makeText(mContext, "Ola Android" + Integer.toString(orderid), Toast.LENGTH_SHORT);
+        //toast.show();
+        Global.getInstance().setSelectedService(id);
+
+        sendMSG("5");
+
+
+    }
+
+    @JavascriptInterface
+    public void onClick_select_worker(int id){
+
+        //Toast toast = Toast.makeText(mContext, "Ola Android" + Integer.toString(orderid), Toast.LENGTH_SHORT);
+        //toast.show();
+        Global.getInstance().setSelectedWorker(id);
+
+        sendMSG("5");
+
+
+    }
+//-------------------------------
+
+    @JavascriptInterface
     public void onClick_services_in_state(int id){
-        System.getInstance().setService(id);
+
         sendMSG("3");
 
 
@@ -31,7 +69,7 @@ public class JavaScriptReceiver {
 
     @JavascriptInterface
     public void onClick_workers_by_service_and_state(int id){
-        System.getInstance().setWorker(id);
+
         sendMSG("4");
 
 
