@@ -53,7 +53,7 @@ public class JavaScriptReceiver {
         //toast.show();
         Global.getInstance().setSelectedWorker(id);
 
-        sendMSG("5");
+        sendMSG("6");
 
 
     }

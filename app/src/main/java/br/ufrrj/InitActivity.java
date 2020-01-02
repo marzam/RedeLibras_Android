@@ -89,7 +89,15 @@ public class InitActivity extends AppCompatActivity {
 
                 case 5:
                     mToolbar.setSubtitle("Selecione o/a prestador(a) de serviço");
-                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_service" + Global.getSelectedServiceString() + "&id_city=" + Global.getSelectedCityString());
+
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_service=" + Global.getSelectedServiceString() + "&id_city=" + Global.getSelectedCityString());
+                    //mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());
+                    break;
+
+                case 6:
+                    mToolbar.setSubtitle("Dados do prestador");
+
+                    mWebView.loadUrl(getApplicationContext().getString(R.string.https_prestador) + "id_user=" + Global.getSelectedWorkerString());
                     //mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());
                     break;
                 //case 4: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=6&id_user=" + System.getInstance().getWorker_toString());break;
