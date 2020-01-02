@@ -1,6 +1,7 @@
 package br.ufrrj;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -54,6 +55,47 @@ public class JavaScriptReceiver {
         Global.getInstance().setSelectedWorker(id);
 
         sendMSG("6");
+
+
+    }
+
+    @JavascriptInterface
+    public void onClick_callMaps(String txt){
+        Global.getInstance().setWokerAddr(txt);
+        sendMSG("7");
+
+/*
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txt);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        mContext.startActivity(mapIntent);
+*/
+
+    }
+
+    @JavascriptInterface
+    public void onClick_callPhone(String txt, int opt){
+        Global.getInstance().setWokerPhone(txt);
+        if (opt == 0){
+            sendMSG("8");
+        }else{
+            sendMSG("9");
+        }
+    }
+
+    @JavascriptInterface
+    public void onClick_sendEmail(String txt){
+        Global.getInstance().setWokerEmail(txt);
+         sendMSG("10");
+
+    }
+
+    @JavascriptInterface
+    public void onClick_callWhatsApp(String txt){
+
+        Toast toast = Toast.makeText(mContext, "WhatsApp" + txt, Toast.LENGTH_SHORT);
+        toast.show();
+
 
 
     }

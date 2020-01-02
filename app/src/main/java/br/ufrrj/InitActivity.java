@@ -1,21 +1,29 @@
 package br.ufrrj;
-
+//http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 public class InitActivity extends AppCompatActivity {
     private WebView mWebView = null;
     private Toolbar mToolbar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +32,7 @@ public class InitActivity extends AppCompatActivity {
         mWebView = findViewById(R.id.mainWeb);
 
 
-        mToolbar =  findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         mToolbar.setSubtitle("Selecione um Estado");
 
         setSupportActionBar(mToolbar);
@@ -38,7 +46,7 @@ public class InitActivity extends AppCompatActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
 
 
-        mWebView.addJavascriptInterface(new JavaScriptReceiver(this), "JSReceiver");
+        mWebView.addJavascriptInterface(new JavaScriptReceiver(this.getApplicationContext()), "JSReceiver");
         mWebView.setWebChromeClient(new MyWebChromeClient());
         mWebView.setWebViewClient(new SSLTolerentWebViewClient());
 
@@ -46,6 +54,8 @@ public class InitActivity extends AppCompatActivity {
         Intent intent = new Intent("custom-event-name");
         intent.putExtra("message", "1");
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+
 
 
 
@@ -65,13 +75,14 @@ public class InitActivity extends AppCompatActivity {
     }//end-protected void onCreate(Bundle savedInstanceState) {
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             int opt = Integer.parseInt(message);
 
-            switch (opt){
+            switch (opt) {
 
                 case 1:
                     mToolbar.setSubtitle("Selecione um Estado");
@@ -100,6 +111,20 @@ public class InitActivity extends AppCompatActivity {
                     mWebView.loadUrl(getApplicationContext().getString(R.string.https_prestador) + "id_user=" + Global.getSelectedWorkerString());
                     //mWebView.loadUrl(getApplicationContext().getString(R.string.https_redelibras) + "state=5&id_state=" + System.getInstance().getState_toString() + "&id_service=" + System.getInstance().getService_toString());
                     break;
+                case 7:
+                    openGoogleMaps();
+                    break;
+                case 8:
+
+                    makePhoneCall();
+
+                    break;
+                case 9:
+                    callInWhatsApp();
+                    break;
+                case 10:
+                    sendEmail();
+                    break;
                 //case 4: mWebView.loadUrl(getApplicationContext().getString(R.string.https_server) + "state=6&id_user=" + System.getInstance().getWorker_toString());break;
                 //case 2: mWebView.loadUrl("https://192.168.1.11/redelibras.php?state=1");break;
             }
@@ -111,6 +136,58 @@ public class InitActivity extends AppCompatActivity {
 
         }
     };//end-private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+
+    private void openGoogleMaps() {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Global.getInstance().getWorkerAddr());
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
+
+    private void makePhoneCall() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:982000483"));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    Activity#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for Activity#requestPermissions for more details.
+                    return;
+                }
+            }
+            startActivity(intent);
+
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getApplicationContext(), "Error in your phone call"+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void callInWhatsApp(){
+        Uri uri = Uri.parse("smsto:" + Global.getWorkerPhone());
+        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+        i.putExtra("sms_body", "olá");
+        i.setPackage("com.whatsapp");
+        startActivity(i);
+    }
+
+    private void sendEmail(){
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{Global.getWorkerEmail()});
+        i.putExtra(Intent.EXTRA_SUBJECT, "RedeLibras");
+        i.putExtra(Intent.EXTRA_TEXT   , "Usuário do Redelibras");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "Não existe cliente de e-mail instalado.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onBackPressed(){
@@ -128,45 +205,8 @@ public class InitActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_item, menu);
-        return true;
-    }
 
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null; //new Intent(ServiceListActivity.this, DealerListActivity.class);
-        int opt = item.getItemId();
-        /*
-        switch (item.getItemId()){
-            case R.id.mnu_login:
-                intent = new Intent(this, LoginActivity.class);
-                break;
-            case R.id.mnu_logout:
-                break;
-            case R.id.mnu_cadastro:
-                break;
-            case R.id.mnu_estado:
-                intent = new Intent(this, StateListActivity.class);
-
-                break;
-            case R.id.mnu_servico:
-                intent = new Intent(this, ServiceListActivity.class);
-
-                break;
-            case R.id.mnu_sobre:
-                break;
-        }
-
-        if (intent != null){
-            startActivity(intent);
-        }*/
-
-        return super.onOptionsItemSelected(item);
-    }
 
 }//end-public class InitActivity extends AppCompatActivity {
